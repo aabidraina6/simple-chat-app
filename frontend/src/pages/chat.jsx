@@ -29,15 +29,33 @@ export default function Chat() {
 
   const sendMessage = () => {
     if (input) {
-      socket.emit("message", { name: newname, message: input });
+      let date = new Date();
+      let options = {
+        timeZone: "Asia/Kolkata",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      };
+      let timeString = date.toLocaleTimeString("en-US", options);
+      socket.emit("message", {
+        name: newname,
+        message: input,
+        time: timeString,
+      });
       setInput("");
     }
   };
 
   const msgElement = messages.map((message, index) => {
     return (
-      <div className={`flex ${message.name !== newname ? 'justify-end' : ''}`}>
-        <Message key={index} name={message.name} message={message.message} />
+      <div className={`flex ${message.name !== newname ? "justify-end" : ""}`}>
+        <Message
+          key={index}
+          name={message.name}
+          message={message.message}
+          time={message.time}
+          flag={message.name === newname}
+        />
       </div>
     );
   });
