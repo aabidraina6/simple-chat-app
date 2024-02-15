@@ -1,6 +1,6 @@
 import Message from "./message";
 import { useLocation } from "react-router-dom";
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
 const socket = io("http://localhost:5000", {
@@ -8,7 +8,7 @@ const socket = io("http://localhost:5000", {
   extraHeaders: {
     "my-custom-header": "abcd",
   },
-  transports: ["websocket" , "polling"],
+  transports: ["websocket", "polling"],
 });
 
 export default function Chat() {
@@ -18,16 +18,25 @@ export default function Chat() {
   const location = useLocation();
   const newname = location.state ? location.state.name : "Anonymous";
 
+  useEffect(() => {
+    socket.on("init", (data) => {
+      setMessages(data);
+    });
+    socket.on("message", (data) => {
+      setMessages([...messages, data]);
+    });
+  }, [messages]);
+
   const sendMessage = () => {
     if (input) {
-      setMessages([...messages, { name: newname, message: input }]);
+      socket.emit("message", { name: newname, message: input });
       setInput("");
     }
   };
 
   const msgElement = messages.map((message, index) => {
     return (
-      <div className="flex">
+      <div className={`flex ${message.name !== newname ? 'justify-end' : ''}`}>
         <Message key={index} name={message.name} message={message.message} />
       </div>
     );
