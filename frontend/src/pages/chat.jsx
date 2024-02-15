@@ -15,12 +15,22 @@ export default function Chat() {
   console.log(socket.id);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
   const newname = location.state ? location.state.name : "Anonymous";
 
   useEffect(() => {
+    socket.emit("ready");
+  }, []);
+
+  useEffect(() => {
+    console.log("useEffect");
+
     socket.on("init", (data) => {
+      console.log("init", data);
+
       setMessages(data);
+      setLoading(false);
     });
     socket.on("message", (data) => {
       setMessages([...messages, data]);
@@ -45,6 +55,19 @@ export default function Chat() {
       setInput("");
     }
   };
+
+  {
+    loading && (
+      <div className="flex items-center justify-center h-screen">
+        <div className="bg-white p-6 rounded shadow-md text-center">
+          <div className="animate-spin mb-4">
+            {/* You can add a spinner icon here */}
+          </div>
+          Loading...
+        </div>
+      </div>
+    );
+  }
 
   const msgElement = messages.map((message, index) => {
     return (
