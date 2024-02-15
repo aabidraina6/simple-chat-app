@@ -26,7 +26,3 @@ This is a simple chat app using `ReactJS`, `NodeJS` and `ExpressJS`
 - Enter your message in the input box and click on `Send` to send the message
 - The messages are shown in the chat window
 
-## Screenshots
-- Login Page
-
-
