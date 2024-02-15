@@ -1,12 +1,22 @@
 import Message from "./message";
 import { useLocation } from "react-router-dom";
-import {React , useState } from "react";
+import { React, useState } from "react";
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:5000", {
+  withCredentials: true,
+  extraHeaders: {
+    "my-custom-header": "abcd",
+  },
+  transports: ["websocket" , "polling"],
+});
 
 export default function Chat() {
+  console.log(socket.id);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const location = useLocation();
-  const newname = location.state.name;
+  const newname = location.state ? location.state.name : "Anonymous";
 
   const sendMessage = () => {
     if (input) {
@@ -15,19 +25,18 @@ export default function Chat() {
     }
   };
 
-  const msgElement = messages.map((message , index) => {
-    return <div className='flex'>
-
+  const msgElement = messages.map((message, index) => {
+    return (
+      <div className="flex">
         <Message key={index} name={message.name} message={message.message} />
-    </div>
-  })
+      </div>
+    );
+  });
 
   console.log(newname);
   return (
     <div className="flex flex-col h-screen gap-2 bg-blue-200">
-      <div className=" flex-grow">
-       {msgElement}
-      </div>
+      <div className=" flex-grow">{msgElement}</div>
       <div className="flex container mx-auto py-10 gap-2">
         <input
           type="text"
