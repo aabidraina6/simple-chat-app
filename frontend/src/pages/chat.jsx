@@ -60,9 +60,7 @@ export default function Chat() {
     loading && (
       <div className="flex items-center justify-center h-screen">
         <div className="bg-white p-6 rounded shadow-md text-center">
-          <div className="animate-spin mb-4">
-            {/* You can add a spinner icon here */}
-          </div>
+          <div className="animate-spin mb-4"></div>
           Loading...
         </div>
       </div>
@@ -87,7 +85,7 @@ export default function Chat() {
   return (
     <div className="flex flex-col h-screen gap-2 bg-blue-200">
       <div className=" flex-grow">{msgElement}</div>
-      <div className="flex container mx-auto py-10 gap-2">
+      <div className="flex container mx-auto py-1 gap-2">
         <input
           type="text"
           value={input}
